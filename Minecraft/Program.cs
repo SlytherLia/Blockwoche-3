@@ -6,19 +6,7 @@ namespace Minecraft
     internal class Program
     {
         static void Main(string[] args)
-        { 
-            int roundsCount = 1;
-            bool mining = true;
-            bool fighting = false;
-            bool game = true;
-            bool isFightOver = false;
-            Random random = new Random();
-            Enemies attackingEnemy;
-            Player player = new(10);
-            Skeleton skeleton = new("Skeleton", 4, 5);
-            Creeper creeper = new("Creeper", 3, 3);
-            Zombies zombie = new("Zombie", 4, 2);
-
+        {
             int woodCount = 0;
             int dirtCount = 0;
             int stoneCount = 0;
@@ -27,30 +15,48 @@ namespace Minecraft
             int creeperCount = 0;
             int skeletonCount = 0;
             int goldenAppleCount = 0;
+            int inputTool;
+            int inputBlock;
+            int randomFight;
+            int randomItem;
+            int roundsCount = 1;
+            int inputWeapon;
+            bool mining = true;
+            bool fighting = false;
+            bool game = true;
+            bool isFightOver = false;
+            Tools usedTool;
+            Blocks usedBlock;
+            Array allTools = Enum.GetValues(typeof(Tools));
+            Array allBlocks = Enum.GetValues(typeof(Blocks));
+            Wood wood = new(Blocks.Wood, 3, ConsoleColor.Yellow);
+            Dirt dirt = new(Blocks.Dirt, 2, ConsoleColor.DarkGreen);
+            Stone stone = new(Blocks.Stone, 4, ConsoleColor.Cyan);
+            Diamond diamond = new(Blocks.Diamond, 7, ConsoleColor.Blue);
+            List<Block> blockList = new List<Block>();
+            Random random = new Random();
+            Enemies attackingEnemy;
+            Player player = new(10);
+            Skeleton skeleton = new("Skeleton", 4, 5);
+            Creeper creeper = new("Creeper", 3, 3);
+            Zombies zombie = new("Zombie", 4, 2);
+            Array allWeapons = Enum.GetValues(typeof(Weapons));
+            Enemies[] allEnemies = new Enemies[3];
+            Weapons usedWeapon;
+
+            allEnemies[0] = skeleton;
+            allEnemies[1] = creeper;
+            allEnemies[2] = zombie;
+
+            blockList.Add(wood);
+            blockList.Add(dirt);
+            blockList.Add(stone);
+            blockList.Add(diamond);
 
             while (game)
             {
                 while (mining)
                 {
-                    int inputTool;
-                    int inputBlock;
-                    int randomFight;
-                    int randomItem;
-                    Tools usedTool;
-                    Blocks usedBlock;
-                    Array allTools = Enum.GetValues(typeof(Tools));
-                    Array allBlocks = Enum.GetValues(typeof(Blocks));
-                    Wood wood = new(Blocks.Wood, 3, ConsoleColor.Yellow);
-                    Dirt dirt = new(Blocks.Dirt, 2, ConsoleColor.DarkGreen);
-                    Stone stone = new(Blocks.Stone, 4, ConsoleColor.Cyan);
-                    Diamond diamond = new(Blocks.Diamond, 7, ConsoleColor.Blue);
-                    List<Block> blockList = new List<Block>();
-
-                    blockList.Add(wood);
-                    blockList.Add(dirt);
-                    blockList.Add(stone);
-                    blockList.Add(diamond);
-
                     Console.WriteLine("Day: {0}", roundsCount);
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Choose a Tool:\n0....Hands\n1....Pickaxe\n2....Axe\n3....Shovel\n10....Exit");
@@ -137,17 +143,9 @@ namespace Minecraft
 
                 while (fighting)
                 {
-                    int inputWeapon;
-                    Array allWeapons = Enum.GetValues(typeof(Weapons));
-                    Enemies[] allEnemies = new Enemies[3];
-                    Weapons usedWeapon;
                     skeleton = new("Skeleton", 4, 5);
                     creeper = new("Creeper", 3, 3);
                     zombie = new("Zombie", 4, 2);
-
-                    allEnemies[0] = skeleton;
-                    allEnemies[1] = creeper;
-                    allEnemies[2] = zombie;
 
                     int rand = random.Next(0, 2);
                     attackingEnemy = allEnemies[rand];
