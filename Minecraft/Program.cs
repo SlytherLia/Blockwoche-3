@@ -72,7 +72,7 @@ namespace Minecraft
                         continue;
                     }
 
-                    Console.WriteLine("Choose a Block:\n0....Wood\n1....Dirt\n2....Axe\n3....Diamond\n10....Exit");
+                    Console.WriteLine("Choose a Block:\n0....Wood\n1....Dirt\n2....Stone\n3....Diamond\n10....Exit");
 
                     try
                     {
@@ -97,10 +97,16 @@ namespace Minecraft
                     {
                         if (b.getName() == usedBlock.ToString())
                         {
-                            randomItem = random.Next(0, 2);
+                            randomItem = random.Next(0, 3);
 
                             b.tool = usedTool;
                             Console.ForegroundColor = b.getColor();
+                            for(int i = 0; i < b.mine(); i++)
+                            {
+                                Console.WriteLine("Mine....");
+                                Thread.Sleep(1000);
+                            }
+
                             Console.WriteLine("It takes {0} seconds to mine {1} with {2}", b.mine(), b.getName(), usedTool.ToString());
                             if (usedBlock == Blocks.Diamond) diamondCount++;
                             else if (usedBlock == Blocks.Dirt) dirtCount++;
