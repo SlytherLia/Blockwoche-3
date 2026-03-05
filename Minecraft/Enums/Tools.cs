@@ -8,7 +8,6 @@ namespace Minecraft
 		Pickaxe,
 		Axe,
 		Shovel,
-		Sword,
-		Bow
+		Exit
 	}
 }

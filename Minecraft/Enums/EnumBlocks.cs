@@ -7,7 +7,8 @@ namespace Minecraft
         Wood,
         Dirt,
         Stone,
-        Diamond
+        Diamond,
+        Exit
     }
 }
 

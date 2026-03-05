@@ -5,45 +5,45 @@ namespace Minecraft
 {
     internal class Program
     {
+        static int woodCount = 0;
+        static int dirtCount = 0;
+        static int stoneCount = 0;
+        static int diamondCount = 0;
+        static int zombieCount = 0;
+        static int creeperCount = 0;
+        static int skeletonCount = 0;
+        static int goldenAppleCount = 0;
+        static int inputTool;
+        static int inputBlock;
+        static int randomFight;
+        static int randomItem;
+        static int roundsCount = 1;
+        static int inputWeapon;
+        static bool mining = true;
+        static bool fighting = false;
+        static bool game = true;
+        static bool isFightOver = false;
+        static Tools usedTool;
+        static Blocks usedBlock;
+        static Array allTools = Enum.GetValues(typeof(Tools));
+        static Array allBlocks = Enum.GetValues(typeof(Blocks));
+        static Wood wood = new(Blocks.Wood, 3, ConsoleColor.Yellow);
+        static Dirt dirt = new(Blocks.Dirt, 2, ConsoleColor.DarkGreen);
+        static Stone stone = new(Blocks.Stone, 4, ConsoleColor.Cyan);
+        static Diamond diamond = new(Blocks.Diamond, 7, ConsoleColor.Blue);
+        static List<Block> blockList = new List<Block>();
+        static Random random = new Random();
+        static Enemies attackingEnemy;
+        static Player player = new(10);
+        static Skeleton skeleton = new("Skeleton", 4, 5);
+        static Creeper creeper = new("Creeper", 3, 3);
+        static Zombies zombie = new("Zombie", 4, 2);
+        static Array allWeapons = Enum.GetValues(typeof(Weapons));
+        static Enemies[] allEnemies = new Enemies[3];
+        static Weapons usedWeapon;
+
         static void Main(string[] args)
         {
-            int woodCount = 0;
-            int dirtCount = 0;
-            int stoneCount = 0;
-            int diamondCount = 0;
-            int zombieCount = 0;
-            int creeperCount = 0;
-            int skeletonCount = 0;
-            int goldenAppleCount = 0;
-            int inputTool;
-            int inputBlock;
-            int randomFight;
-            int randomItem;
-            int roundsCount = 1;
-            int inputWeapon;
-            bool mining = true;
-            bool fighting = false;
-            bool game = true;
-            bool isFightOver = false;
-            Tools usedTool;
-            Blocks usedBlock;
-            Array allTools = Enum.GetValues(typeof(Tools));
-            Array allBlocks = Enum.GetValues(typeof(Blocks));
-            Wood wood = new(Blocks.Wood, 3, ConsoleColor.Yellow);
-            Dirt dirt = new(Blocks.Dirt, 2, ConsoleColor.DarkGreen);
-            Stone stone = new(Blocks.Stone, 4, ConsoleColor.Cyan);
-            Diamond diamond = new(Blocks.Diamond, 7, ConsoleColor.Blue);
-            List<Block> blockList = new List<Block>();
-            Random random = new Random();
-            Enemies attackingEnemy;
-            Player player = new(10);
-            Skeleton skeleton = new("Skeleton", 4, 5);
-            Creeper creeper = new("Creeper", 3, 3);
-            Zombies zombie = new("Zombie", 4, 2);
-            Array allWeapons = Enum.GetValues(typeof(Weapons));
-            Enemies[] allEnemies = new Enemies[3];
-            Weapons usedWeapon;
-
             allEnemies[0] = skeleton;
             allEnemies[1] = creeper;
             allEnemies[2] = zombie;
@@ -59,18 +59,20 @@ namespace Minecraft
                 {
                     Console.WriteLine("Day: {0}", roundsCount);
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.WriteLine("Choose a Tool:\n0....Hands\n1....Pickaxe\n2....Axe\n3....Shovel\n10....Exit");
+                    Console.WriteLine("Choose a Tool:\n0....Hands\n1....Pickaxe\n2....Axe\n3....Shovel\n4....Exit");
+
                     try
                     {
                         inputTool = Convert.ToInt32(Console.ReadLine());
 
-                        if (inputTool == 10)
+                        usedTool = (Tools)allTools.GetValue(inputTool);
+
+                        if (usedTool == Tools.Exit)
                         {
                             game = false;
                             mining = false;
                             break;
                         }
-                        usedTool = (Tools)allTools.GetValue(inputTool);
                     }
                     catch
                     {
@@ -78,20 +80,19 @@ namespace Minecraft
                         continue;
                     }
 
-                    Console.WriteLine("Choose a Block:\n0....Wood\n1....Dirt\n2....Stone\n3....Diamond\n10....Exit");
+                    Console.WriteLine("Choose a Block:\n0....Wood\n1....Dirt\n2....Stone\n3....Diamond\n4....Exit");
 
                     try
                     {
                         inputBlock = Convert.ToInt32(Console.ReadLine());
+                        usedBlock = (Blocks)allBlocks.GetValue(inputBlock);
 
-                        if (inputBlock == 10)
+                        if (usedBlock == Blocks.Exit)
                         {
                             game = false;
                             mining = false;
                             break;
-                        }
-
-                        usedBlock = (Blocks)allBlocks.GetValue(inputBlock);
+                        } 
                     }
                     catch
                     {
@@ -107,7 +108,7 @@ namespace Minecraft
 
                             b.tool = usedTool;
                             Console.ForegroundColor = b.getColor();
-                            for(int i = 0; i < b.mine(); i++)
+                            for (int i = 0; i < b.mine(); i++)
                             {
                                 Console.WriteLine("Mine....");
                                 Thread.Sleep(1000);
@@ -125,7 +126,7 @@ namespace Minecraft
                                 Console.WriteLine("Congrats you found a golden Apple! Your HP is now restored!");
                                 Console.ForegroundColor = ConsoleColor.Gray;
                             }
-                        } 
+                        }
                     }
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine("------------------------------------------");
@@ -188,66 +189,65 @@ namespace Minecraft
                 }
             }
 
-
             addToFile();
             Console.WriteLine("Thanks for playing!\nBye Bye!");
 
-
-            void checkIfFightOver()
+            if (player.HP == 0)
             {
-                if (attackingEnemy.HP == 0)
-                {
-                    if (attackingEnemy.name == skeleton.name) skeletonCount++;
-                    else if (attackingEnemy.name == creeper.name) creeperCount++;
-                    else if (attackingEnemy.name == zombie.name) zombieCount++;
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("You have won the Fight!\n------------------------------------------");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    fighting = false;
-                    mining = true;
-                    roundsCount++;
-                    isFightOver = true;
-                }
-
-                if (player.HP == 0)
-                {
-                    Console.ForegroundColor= ConsoleColor.Magenta;
-                    Console.WriteLine("\nYou have no HP left! Game Over!");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    game = false;
-                    fighting = false;
-                    isFightOver = true;
-                }
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine("\nYou have no HP left! Game Over!");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                game = false;
+                fighting = false;
+                isFightOver = true;
             }
+        }
 
-            void enemyTurn()
+        static void checkIfFightOver()
+        {
+            if (attackingEnemy.HP == 0)
             {
-                if (attackingEnemy == skeleton || attackingEnemy.distance == 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    player.HP -= attackingEnemy.attack();
-                    Console.WriteLine("{0} is attacking! Remaining HP: {1}", attackingEnemy.name, player.HP);
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                if (attackingEnemy.name == skeleton.name) skeletonCount++;
+                else if (attackingEnemy.name == creeper.name) creeperCount++;
+                else if (attackingEnemy.name == zombie.name) zombieCount++;
 
-                    checkIfFightOver();
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("You are lucky! {0} is too far away to attack!", attackingEnemy.name);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    checkIfFightOver();
-                }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("You have won the Fight!\n------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                fighting = false;
+                mining = true;
+                roundsCount++;
+                isFightOver = true;
             }
+        }
 
-            void addToFile()
+        static void enemyTurn()
+        {
+            if (attackingEnemy == skeleton || attackingEnemy.distance == 0)
             {
-                string path = "C:/Users/Student/source/repos/Blockwoche 3/Minecraft/stats";
-                int totalBlocks = diamondCount + stoneCount + dirtCount + woodCount;
-                int totalMonsters = zombieCount + creeperCount + skeletonCount;
+                Console.ForegroundColor = ConsoleColor.Red;
+                player.HP -= attackingEnemy.attack();
+                Console.WriteLine("{0} is attacking! Remaining HP: {1}", attackingEnemy.name, player.HP);
+                Console.ForegroundColor = ConsoleColor.Gray;
 
-                string[] text = {"Total Blocks mined: " + totalBlocks,
+                checkIfFightOver();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("You are lucky! {0} is too far away to attack!", attackingEnemy.name);
+                Console.ForegroundColor = ConsoleColor.Gray;
+                checkIfFightOver();
+            }
+        }
+
+        static void addToFile()
+        {
+            string path = "C:/Users/Student/source/repos/Blockwoche 3/Minecraft/stats";
+            int totalBlocks = diamondCount + stoneCount + dirtCount + woodCount;
+            int totalMonsters = zombieCount + creeperCount + skeletonCount;
+
+            string[] text = {"Total Blocks mined: " + totalBlocks,
                                  "Diamonds: " + diamondCount,
                                  "Stone: " + stoneCount,
                                  "Dirt: " + dirtCount,
@@ -259,8 +259,7 @@ namespace Minecraft
                                  "Golden Apples Found: " + goldenAppleCount,
                                  "----------------------------------------------------" };
 
-                File.AppendAllLines(path, text);
-            }
+            File.AppendAllLines(path, text);
         }
     }
 }

@@ -7,12 +7,12 @@ namespace Movies
 {
     internal class Program
     {
+        static string path = "C:/Users/Student/source/repos/Blockwoche 3/Movies/text";
+        static List<Movie> movies = new List<Movie>();
+        static Dictionary<string, List<string>> movieActorDic = new Dictionary<string, List<string>>();
+
         static void Main(string[] args)
         {
-            string path = "C:/Users/Student/source/repos/Blockwoche 3/Movies/text";
-            List <Movie> movies = new List<Movie>();
-            Dictionary<string, List<string>> movieActorDic = new Dictionary<string, List<string>>();
-
             getExisting();
 
             while (true)
@@ -30,7 +30,6 @@ namespace Movies
                     continue;
                 }
 
-
                 Console.WriteLine("Enter Movie Title");
                 string inputMovie = Console.ReadLine();
 
@@ -46,97 +45,96 @@ namespace Movies
 
                 addActorToMovie(inputActor, inputMovie);
                 save();
+            }   
+        }
+
+        static void addActorToMovie(string inputActor, string inputMovie)
+        {
+            Movie movie = movies.Find(m => m.title == inputMovie);
+
+            if (movie == null)
+            {
+                movie = new Movie();
+                movie.title = inputActor;
+                movies.Add(movie);
             }
-           
-            void addActorToMovie(string inputActor, string inputMovie)
-            {
-                Movie movie = movies.Find(m => m.title == inputMovie);
 
-                if(movie == null)
+            Actor actor = new Actor();
+            actor.name = inputActor;
+            movie.actors.Add(actor);
+        }
+
+        static void printAll()
+        {
+            foreach (Movie m in movies)
+            {
+
+                Console.Write(m.title + " - ");
+
+                foreach (Actor actor in m.actors)
                 {
-                    movie = new Movie();
-                    movie.title = inputActor;
-                    movies.Add(movie);
+                    Console.Write(actor.name + ", ");
                 }
+                Console.WriteLine();
+            }
 
-                Actor actor = new Actor();
-                actor.name = inputActor;
-                movie.actors.Add(actor);
-            } 
+            Console.WriteLine("\n-----------------------------\n");
+        }
 
-            void printAll()
+        static void save()
+        {
+            using (StreamWriter sw = new StreamWriter(path))
             {
-                foreach (Movie m in movies)
+                foreach (Movie movie in movies)
                 {
-
-                    Console.Write(m.title + " - ");
-
-                    foreach (Actor actor in m.actors)
+                    string actorList = "";
+                    foreach (Actor actor in movie.actors)
                     {
-                        Console.Write(actor.name + ", ");
+                        actorList += actor.name + ", ";
                     }
-                    Console.WriteLine();
+                    sw.WriteLine(movie.title + " - " + actorList);
                 }
+            }
+        }
 
-                Console.WriteLine("\n-----------------------------\n");
+        static void getExisting()
+        {
+            if (!File.Exists(path))
+            {
+                return;
             }
 
-            void save()
-            {
-                using (StreamWriter sw = new StreamWriter(path))
-                {
-                    foreach(Movie movie in movies)
-                    {
-                        string actorList = "";
-                        foreach (Actor actor in movie.actors)
-                        {
-                            actorList += actor.name + ", ";
-                        }
-                        sw.WriteLine(movie.title + " - " + actorList);
-                    }
-                }
-                
-            }
+            string[] lines = File.ReadAllLines(path);
 
-            void getExisting()
+            foreach (string line in lines)
             {
-                if (!File.Exists(path))
+                string[] parts = line.Split(" - ");
+
+                if (parts.Length < 2)
                 {
-                    return;
+                    continue;
                 }
 
-                string[] lines = File.ReadAllLines(path);
+                Movie movie = new Movie();
+                movie.title = parts[0];
 
-                foreach (string line in lines)
+                string[] actors = parts[1].Split(", ");
+
+                foreach (string actorname in actors)
                 {
-                    string[] parts = line.Split(" - ");
+                    string name = actorname.Trim();
 
-                    if (parts.Length < 2)
+                    if (name == "")
                     {
                         continue;
                     }
+                    Actor actor = new Actor();
+                    actor.name = name;
 
-                    Movie movie = new Movie();
-                    movie.title = parts[0];
-
-                    string[] actors = parts[1].Split(", ");
-
-                    foreach (string actorname in actors)
-                    {
-                        string name = actorname.Trim();
-
-                        if (name == "")
-                        {
-                            continue;
-                        }
-                        Actor actor = new Actor();
-                        actor.name = name;
-
-                        movie.actors.Add(actor);
-                    }
-
-                    movies.Add(movie);
+                    movie.actors.Add(actor);
                 }
+
+                movies.Add(movie);
             }
         }
     }
