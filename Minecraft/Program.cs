@@ -243,7 +243,7 @@ namespace Minecraft
 
             void addToFile()
             {
-                string path = "C:/Users/Student/source/repos/Stats.txt";
+                string path = "C:/Users/Student/source/repos/Blockwoche 3/Minecraft/stats";
                 int totalBlocks = diamondCount + stoneCount + dirtCount + woodCount;
                 int totalMonsters = zombieCount + creeperCount + skeletonCount;
 
