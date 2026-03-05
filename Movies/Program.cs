@@ -10,65 +10,72 @@ namespace Movies
         static void Main(string[] args)
         {
             string path = "C:/Users/Student/source/repos/Blockwoche 3/Movies/text";
-            string inputActor;
-            string inputMovie ="";
-
-            List<Movie> moviesFromFile = new List<Movie>();
-            Dictionary<Movie, string> movieActorDic = new Dictionary<Movie, string>();
+            List <Movie> movies = new List<Movie>();
+            Dictionary<string, List<string>> movieActorDic = new Dictionary<string, List<string>>();
 
             getExisting();
 
             while (true)
             {
                 Console.WriteLine("Enter Actor Name (First Name, Last Name)");
-                inputActor = Console.ReadLine();
+                string inputActor = Console.ReadLine();
 
-                checkInput();
-                if (inputActor == "print")
+                if(inputActor == "exit")
                 {
+                    break;
+                }
+                if(inputActor == "print")
+                {
+                    printAll();
                     continue;
                 }
 
 
                 Console.WriteLine("Enter Movie Title");
-                inputMovie = Console.ReadLine();
-               
-                checkInput();
-                if(inputMovie == "print")
-                {                   
+                string inputMovie = Console.ReadLine();
+
+                if (inputMovie == "exit")
+                {
+                    break;
+                }
+                if (inputMovie == "print")
+                {
+                    printAll(); 
                     continue;
                 }
 
+                addActorToMovie(inputActor, inputMovie);
                 save();
             }
            
-            void checkInput()
+            void addActorToMovie(string inputActor, string inputMovie)
             {
-                if(inputMovie == "exit" || inputActor == "exit")
+                Movie movie = movies.Find(m => m.title == inputMovie);
+
+                if(movie == null)
                 {
-                    Environment.Exit(0);
+                    movie = new Movie();
+                    movie.title = inputActor;
+                    movies.Add(movie);
                 }
-                if(inputMovie == "print" || inputActor == "print")
-                {
-                    printAll();
-                }
+
+                Actor actor = new Actor();
+                actor.name = inputActor;
+                movie.actors.Add(actor);
             } 
-
-            void createMovie(Actor actor)
-            {
-                Movie movie = new Movie();
-                movie.title = inputMovie;
-
-                movie.allActors.Add(actor);
-            }
 
             void printAll()
             {
-                getExisting();
-                foreach (Movie m in moviesFromFile)
+                foreach (Movie m in movies)
                 {
 
-                    Console.WriteLine(m.title + " - " + movieActorDic[m]);
+                    Console.Write(m.title + " - ");
+
+                    foreach (Actor actor in m.actors)
+                    {
+                        Console.Write(actor.name + ", ");
+                    }
+                    Console.WriteLine();
                 }
 
                 Console.WriteLine("\n-----------------------------\n");
@@ -76,58 +83,59 @@ namespace Movies
 
             void save()
             {
-                bool check = false;
-                Movie tempMovie = null;
-
-                foreach(Movie m in moviesFromFile)
+                using (StreamWriter sw = new StreamWriter(path))
                 {
-                    if(m.title == inputMovie)
+                    foreach(Movie movie in movies)
                     {
-                        tempMovie = m;
-                        check = true;
-                    }
-                }
-
-                if(check)
-                {
-                    string temp = movieActorDic[tempMovie];
-                    temp += inputActor + ", ";
-                    movieActorDic[tempMovie] = temp;
-
-                    using (StreamWriter sw = new StreamWriter(path, false))
-                    {
-                        foreach (Movie m in moviesFromFile)
+                        string actorList = "";
+                        foreach (Actor actor in movie.actors)
                         {
-                            string tempstring = m.title + " - " + movieActorDic[m];
-                            sw.WriteLine(tempstring);
+                            actorList += actor.name + ", ";
                         }
+                        sw.WriteLine(movie.title + " - " + actorList);
                     }
                 }
-                else
-                {
-                    using (StreamWriter sw = new StreamWriter(path, true))
-                    {
-                        string temp = inputMovie + " - " + inputActor + ", ";
-                        sw.WriteLine(temp);
-                    }
-                }
+                
             }
 
             void getExisting()
             {
-                moviesFromFile = new List<Movie>();
-                movieActorDic = new Dictionary<Movie, string>();
-
-                string[] tempArray = File.ReadAllLines(path);
-
-                for(int i = 0; i < tempArray.Length; i++)
+                if (!File.Exists(path))
                 {
+                    return;
+                }
+
+                string[] lines = File.ReadAllLines(path);
+
+                foreach (string line in lines)
+                {
+                    string[] parts = line.Split(" - ");
+
+                    if (parts.Length < 2)
+                    {
+                        continue;
+                    }
+
                     Movie movie = new Movie();
-                    string[] temp = tempArray[i].Split('-');
-                    movie.title = temp[0];
-                    moviesFromFile.Add(movie);
-                    if(temp.Length < 1) { return; }
-                    movieActorDic.Add(movie, temp[1]);
+                    movie.title = parts[0];
+
+                    string[] actors = parts[1].Split(", ");
+
+                    foreach (string actorname in actors)
+                    {
+                        string name = actorname.Trim();
+
+                        if (name == "")
+                        {
+                            continue;
+                        }
+                        Actor actor = new Actor();
+                        actor.name = name;
+
+                        movie.actors.Add(actor);
+                    }
+
+                    movies.Add(movie);
                 }
             }
         }
