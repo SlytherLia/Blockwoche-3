@@ -2,9 +2,9 @@
 
 namespace Minecraft
 {
-    public class Zombies : Enemies
+    public class Zombie : Enemies
     {
-        public Zombies(string name, int HP, int distance) : base(name, HP, distance)
+        public Zombie(string name, int HP, int distance) : base(name, HP, distance)
         {
         }
     }

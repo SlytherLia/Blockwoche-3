@@ -6,7 +6,7 @@ namespace Minecraft
 	{
 		public string name { get; }
 		public int HP {get; set;}
-		public int distance { get; }
+		public int distance { get; set; }
 
         public Enemies(string name, int HP, int distance) 
 		{

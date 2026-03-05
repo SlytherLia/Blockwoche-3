@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Minecraft
@@ -33,20 +34,20 @@ namespace Minecraft
         static Diamond diamond = new(Blocks.Diamond, 7, ConsoleColor.Blue);
         static List<Block> blockList = new List<Block>();
         static Random random = new Random();
-        static Enemies attackingEnemy;
         static Player player = new(10);
+        static Array allWeapons = Enum.GetValues(typeof(Weapons));
+        static Weapons usedWeapon;
+        static Enemies attackingEnemy = null;
+        static Enemies[] allEnemies = new Enemies[3];
         static Skeleton skeleton = new("Skeleton", 4, 5);
         static Creeper creeper = new("Creeper", 3, 3);
-        static Zombies zombie = new("Zombie", 4, 2);
-        static Array allWeapons = Enum.GetValues(typeof(Weapons));
-        static Enemies[] allEnemies = new Enemies[3];
-        static Weapons usedWeapon;
+        static Zombie zombie = new("Zombie", 4, 2);
 
         static void Main(string[] args)
         {
-            allEnemies[0] = skeleton;
-            allEnemies[1] = creeper;
-            allEnemies[2] = zombie;
+            allEnemies[0] = null;
+            allEnemies[1] = null;
+            allEnemies[2] = null;
 
             blockList.Add(wood);
             blockList.Add(dirt);
@@ -123,6 +124,7 @@ namespace Minecraft
                             if (randomItem == 0)
                             {
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                player.HP = 10;
                                 Console.WriteLine("Congrats you found a golden Apple! Your HP is now restored!");
                                 Console.ForegroundColor = ConsoleColor.Gray;
                             }
@@ -142,11 +144,18 @@ namespace Minecraft
                     roundsCount++;
                 }
 
-                while (fighting)
+                if (fighting)
                 {
-                    skeleton = new("Skeleton", 4, 5);
-                    creeper = new("Creeper", 3, 3);
-                    zombie = new("Zombie", 4, 2);
+                    skeleton.HP = 4;
+                    zombie.HP = 4;
+                    zombie.distance = 2;
+                    creeper.HP = 3;
+                    creeper.distance = 3;
+
+
+                    allEnemies[0] = skeleton;
+                    allEnemies[1] = creeper;
+                    allEnemies[2] = zombie;
 
                     int rand = random.Next(0, 2);
                     attackingEnemy = allEnemies[rand];
@@ -168,7 +177,12 @@ namespace Minecraft
                             {
                                 Console.WriteLine("Enemy out of reach. You can't attack.");
                                 enemyTurn();
-                                if (isFightOver) break;
+
+                                if (isFightOver)
+                                {
+                                    attackingEnemy = null;
+                                    break;
+                                }
                             }
                             else
                             {
@@ -176,7 +190,12 @@ namespace Minecraft
                                 attackingEnemy.HP -= 1;
 
                                 enemyTurn();
-                                if (isFightOver) break;
+
+                                if (isFightOver)
+                                { 
+                                    attackingEnemy = null;
+                                    break;
+                                }
                             }
                             attackingEnemy.move();
                         }
@@ -223,7 +242,7 @@ namespace Minecraft
 
         static void enemyTurn()
         {
-            if (attackingEnemy == skeleton || attackingEnemy.distance == 0)
+            if (attackingEnemy == allEnemies[0] || attackingEnemy.distance == 0)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 player.HP -= attackingEnemy.attack();
