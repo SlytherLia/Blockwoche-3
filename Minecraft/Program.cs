@@ -45,9 +45,9 @@ namespace Minecraft
 
         static void Main(string[] args)
         {
-            allEnemies[0] = null;
-            allEnemies[1] = null;
-            allEnemies[2] = null;
+            allEnemies[0] = skeleton;
+            allEnemies[1] = creeper;
+            allEnemies[2] = zombie;
 
             blockList.Add(wood);
             blockList.Add(dirt);
@@ -145,17 +145,12 @@ namespace Minecraft
                 }
 
                 if (fighting)
-                {
-                    skeleton.HP = 4;
-                    zombie.HP = 4;
-                    zombie.distance = 2;
-                    creeper.HP = 3;
-                    creeper.distance = 3;
-
-
-                    allEnemies[0] = skeleton;
-                    allEnemies[1] = creeper;
-                    allEnemies[2] = zombie;
+                
+                    skeleton.HP = 20;
+                    zombie.HP = 20;
+                    zombie.distance = 10;
+                    creeper.HP = 20;
+                    creeper.distance = 10;
 
                     int rand = random.Next(0, 2);
                     attackingEnemy = allEnemies[rand];
