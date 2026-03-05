@@ -58,7 +58,7 @@ namespace Minecraft
             {
                 while (mining)
                 {
-                    Console.WriteLine("Day: {0}", roundsCount);
+                    Console.WriteLine("Day: {0} - HP: {1}" , roundsCount, player.HP);
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Choose a Tool:\n0....Hands\n1....Pickaxe\n2....Axe\n3....Shovel\n4....Exit");
 
