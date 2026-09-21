@@ -95,10 +95,21 @@ namespace Minecraft
 
                             foreach (Block b in blockList)
                             {
-                                if (b.getName() == Blocks.Diamond.ToString()) Console.WriteLine("Diamonds: {0}", diamondCount);
-                                else if (b.getName() == Blocks.Dirt.ToString()) Console.WriteLine("Dirt: {0}", dirtCount);
-                                else if (b.getName() == Blocks.Stone.ToString()) Console.WriteLine("Stone: {0}", stoneCount);
-                                else if (b.getName() == Blocks.Wood.ToString()) Console.WriteLine("Wood: {0}", woodCount);
+                                switch(b.getName())
+                                {
+                                    case Blocks.Diamond.ToString():
+                                        Console.WriteLine("Diamonds: {0}", diamondCount);
+                                        break;
+                                    case Blocks.Dirt.ToString():
+                                        Console.WriteLine("Dirt: {0}", dirtCount);
+                                        break;
+                                    case Blocks.Stone.ToString():
+                                        Console.WriteLine("Stone: {0}", stoneCount);
+                                        break;
+                                    case Blocks.Wood.ToString():
+                                        Console.WriteLine("Wood: {0}", woodCount);
+                                        break;
+                                }
                             }
                             continue;
                         }
