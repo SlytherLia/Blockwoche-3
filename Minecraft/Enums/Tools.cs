@@ -2,12 +2,13 @@
 
 namespace Minecraft
 {
-	enum Tools
+	public enum Tools
 	{
 		Hands,
 		Pickaxe,
 		Axe,
 		Shovel,
-		Exit
+		Exit,
+		Loot
 	}
 }

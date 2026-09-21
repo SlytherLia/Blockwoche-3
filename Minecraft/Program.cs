@@ -1,11 +1,26 @@
-﻿using System.Reflection;
+﻿using System.Formats.Asn1;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Collections;
 
 namespace Minecraft
 {
-    internal class Program
+    public class Program : IEnumerable<Block>
     {
+        public IEnumerator<Block> GetEnumerator()
+        {
+            foreach (Block b in blockList)
+            {
+                yield return b;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         static int woodCount = 0;
         static int dirtCount = 0;
         static int stoneCount = 0;
@@ -58,9 +73,9 @@ namespace Minecraft
             {
                 while (mining)
                 {
-                    Console.WriteLine("Day: {0} - HP: {1}" , roundsCount, player.HP);
+                    Console.WriteLine("Day: {0} - HP: {1}", roundsCount, player.HP);
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.WriteLine("Choose a Tool:\n0....Hands\n1....Pickaxe\n2....Axe\n3....Shovel\n4....Exit");
+                    Console.WriteLine("Choose a Tool:\n0....Hands\n1....Pickaxe\n2....Axe\n3....Shovel\n4....Exit\n5....Show Every Loot");
 
                     try
                     {
@@ -74,6 +89,19 @@ namespace Minecraft
                             mining = false;
                             break;
                         }
+                        else if (usedTool == Tools.Loot)
+                        {
+                            Console.WriteLine("You have mined:");
+
+                            foreach (Block b in blockList)
+                            {
+                                if (b.getName() == Blocks.Diamond.ToString()) Console.WriteLine("Diamonds: {0}", diamondCount);
+                                else if (b.getName() == Blocks.Dirt.ToString()) Console.WriteLine("Dirt: {0}", dirtCount);
+                                else if (b.getName() == Blocks.Stone.ToString()) Console.WriteLine("Stone: {0}", stoneCount);
+                                else if (b.getName() == Blocks.Wood.ToString()) Console.WriteLine("Wood: {0}", woodCount);
+                            }
+                            continue;
+                        }
                     }
                     catch
                     {
@@ -81,7 +109,7 @@ namespace Minecraft
                         continue;
                     }
 
-                    Console.WriteLine("Choose a Block:\n0....Wood\n1....Dirt\n2....Stone\n3....Diamond\n4....Exit");
+                    Console.WriteLine("Choose a Block:\n0....Wood\n1....Dirt\n2....Stone\n3....Diamond\n4....Exit\n5....Show Every Loot");
 
                     try
                     {
@@ -93,7 +121,23 @@ namespace Minecraft
                             game = false;
                             mining = false;
                             break;
-                        } 
+                        }
+                        else if (usedBlock == Blocks.Loot)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.WriteLine("You have mined:");
+
+                            foreach (Block b in blockList)
+                            {
+                                if (b.getName() == Blocks.Diamond.ToString()) Console.WriteLine("Diamonds: {0}", diamondCount);
+                                else if (b.getName() == Blocks.Dirt.ToString()) Console.WriteLine("Dirt: {0}", dirtCount);
+                                else if (b.getName() == Blocks.Stone.ToString()) Console.WriteLine("Stone: {0}", stoneCount);
+                                else if (b.getName() == Blocks.Wood.ToString()) Console.WriteLine("Wood: {0}", woodCount);
+                            }
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.WriteLine("------------------------------------------");
+                            continue;
+                        }
                     }
                     catch
                     {
@@ -119,10 +163,11 @@ namespace Minecraft
                             */
 
                             Console.WriteLine("It takes {0} seconds to mine {1} with {2}", b.mine(), b.getName(), usedTool.ToString());
-                            if (usedBlock == Blocks.Diamond) diamondCount++;
-                            else if (usedBlock == Blocks.Dirt) dirtCount++;
-                            else if (usedBlock == Blocks.Stone) stoneCount++;
-                            else if (usedBlock == Blocks.Wood) woodCount++;
+                            Console.WriteLine("You mined {0} {1}", b.GiveLoot(), b.getName());
+                            if (usedBlock == Blocks.Diamond) diamondCount += b.GiveLoot();
+                            else if (usedBlock == Blocks.Dirt) dirtCount += b.GiveLoot();
+                            else if (usedBlock == Blocks.Stone) stoneCount += b.GiveLoot();
+                            else if (usedBlock == Blocks.Wood) woodCount += b.GiveLoot();
                             /*
                             if (randomItem == 0)
                             {
@@ -210,8 +255,9 @@ namespace Minecraft
                 }
                 */
             }
-                    addToFile();
-                    Console.WriteLine("Thanks for playing!\nBye Bye!");
+            addToFile();
+            Console.WriteLine("Thanks for playing!\nBye Bye!\nPress any key to exit.");
+            Console.ReadKey();
             /*
             if (player.HP == 0) {
                 Console.ForegroundColor = ConsoleColor.Magenta;
@@ -222,9 +268,9 @@ namespace Minecraft
                 isFightOver = true;
             }
             */
-            
+
         }
-                    
+
         /*
         static void checkIfFightOver()
         {

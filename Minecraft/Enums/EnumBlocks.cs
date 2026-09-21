@@ -2,13 +2,14 @@
 
 namespace Minecraft
 {
-    enum Blocks
+    public enum Blocks
     {
         Wood,
         Dirt,
         Stone,
         Diamond,
-        Exit
+        Exit,
+        Loot
     }
 }
 

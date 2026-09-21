@@ -2,7 +2,7 @@
 
 namespace Minecraft
 {
-    internal class Diamond : Block
+    public class Diamond : Block
     {
         public Diamond(Blocks name, int resistance, ConsoleColor color) : base(name, resistance, color)
         {
@@ -25,6 +25,21 @@ namespace Minecraft
             else
             {
                 return base.resistance * 5;
+            }
+        }
+
+        public override int GiveLoot()
+        {
+            switch(base.tool)
+            {
+                case Tools.Hands:
+                    return 0;
+                case Tools.Pickaxe:
+                    return 3;
+                case Tools.Shovel:
+                    return 1;
+                default:
+                    return 2;
             }
         }
     }

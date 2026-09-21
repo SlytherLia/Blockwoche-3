@@ -2,7 +2,7 @@
 
 namespace Minecraft
 {
-    internal class Dirt : Block
+    public class Dirt : Block
     {
         public Dirt(Blocks name, int resistance, ConsoleColor color) : base(name, resistance, color)
         {
@@ -26,6 +26,21 @@ namespace Minecraft
             else
             {
                 return base.resistance * 1;
+            }
+        }
+
+        public override int GiveLoot()
+        {
+            switch (base.tool)
+            {
+                case Tools.Hands:
+                    return 3;
+                case Tools.Pickaxe:
+                    return 2;
+                case Tools.Shovel:
+                    return 4;
+                default:
+                    return 1;
             }
         }
     }

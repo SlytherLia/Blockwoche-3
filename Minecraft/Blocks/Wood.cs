@@ -2,7 +2,7 @@
 
 namespace Minecraft
 {
-    internal class Wood : Block
+    public class Wood : Block
     {
         public Wood(Blocks name, int resistance, ConsoleColor color) : base(name, resistance, color)
         { 
@@ -26,6 +26,21 @@ namespace Minecraft
             else
             {
                 return base.resistance;
+            }
+        }
+
+        public override int GiveLoot()
+        {
+            switch (base.tool)
+            {
+                case Tools.Hands:
+                    return 2;
+                case Tools.Pickaxe:
+                    return 1;
+                case Tools.Shovel:
+                    return 0;
+                default:
+                    return 4;
             }
         }
     }

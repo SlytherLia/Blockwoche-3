@@ -2,8 +2,8 @@
 
 namespace Minecraft
 {
-	internal abstract class Block
-	{
+	public abstract class Block : ILoot
+    {
 		public Blocks name { get; }
 		public int resistance;
 		public ConsoleColor color;
@@ -24,5 +24,7 @@ namespace Minecraft
 		{
 			return resistance;
 		}
-	}
+
+		public virtual int GiveLoot() { return 0; }
+    }
 }
