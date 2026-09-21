@@ -105,22 +105,25 @@ namespace Minecraft
                     {
                         if (b.getName() == usedBlock.ToString())
                         {
-                            randomItem = random.Next(0, 3);
+                            // randomItem = random.Next(0, 3);
 
                             b.tool = usedTool;
                             Console.ForegroundColor = b.getColor();
+
+                            /*
                             for (int i = 0; i < b.mine(); i++)
                             {
                                 Console.WriteLine("Mine....");
                                 Thread.Sleep(1000);
                             }
+                            */
 
                             Console.WriteLine("It takes {0} seconds to mine {1} with {2}", b.mine(), b.getName(), usedTool.ToString());
                             if (usedBlock == Blocks.Diamond) diamondCount++;
                             else if (usedBlock == Blocks.Dirt) dirtCount++;
                             else if (usedBlock == Blocks.Stone) stoneCount++;
                             else if (usedBlock == Blocks.Wood) woodCount++;
-
+                            /*
                             if (randomItem == 0)
                             {
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -128,11 +131,13 @@ namespace Minecraft
                                 Console.WriteLine("Congrats you found a golden Apple! Your HP is now restored!");
                                 Console.ForegroundColor = ConsoleColor.Gray;
                             }
+                            */
                         }
                     }
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine("------------------------------------------");
 
+                    /*
                     randomFight = random.Next(0, 4);
 
                     if (randomFight == 0)
@@ -142,9 +147,11 @@ namespace Minecraft
                     }
 
                     roundsCount++;
+                    */
                 }
-
-                if (fighting)
+                /*
+                if (fighting) 
+                { 
                 
                     skeleton.HP = 20;
                     zombie.HP = 20;
@@ -201,13 +208,12 @@ namespace Minecraft
                         }
                     }
                 }
+                */
             }
-
-            addToFile();
-            Console.WriteLine("Thanks for playing!\nBye Bye!");
-
-            if (player.HP == 0)
-            {
+                    addToFile();
+                    Console.WriteLine("Thanks for playing!\nBye Bye!");
+            /*
+            if (player.HP == 0) {
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("\nYou have no HP left! Game Over!");
                 Console.ForegroundColor = ConsoleColor.Gray;
@@ -215,8 +221,11 @@ namespace Minecraft
                 fighting = false;
                 isFightOver = true;
             }
+            */
+            
         }
-
+                    
+        /*
         static void checkIfFightOver()
         {
             if (attackingEnemy.HP == 0)
@@ -236,7 +245,7 @@ namespace Minecraft
         }
 
         static void enemyTurn()
-        {
+        {             
             if (attackingEnemy == allEnemies[0] || attackingEnemy.distance == 0)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -254,10 +263,11 @@ namespace Minecraft
                 checkIfFightOver();
             }
         }
+        */
 
         static void addToFile()
         {
-            string path = "C:/Users/Student/source/repos/Blockwoche 3/Minecraft/stats";
+            string path = "C:/Users/Student/source/repos/SlytherLia/Blockwoche-3/Minecraft/stats";
             int totalBlocks = diamondCount + stoneCount + dirtCount + woodCount;
             int totalMonsters = zombieCount + creeperCount + skeletonCount;
 
