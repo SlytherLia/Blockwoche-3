@@ -6,21 +6,8 @@ using System.Collections;
 
 namespace Minecraft
 {
-    public class Program : IEnumerable<Block>
+    public class Program
     {
-        public IEnumerator<Block> GetEnumerator()
-        {
-            foreach (Block b in blockList)
-            {
-                yield return b;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
         static int woodCount = 0;
         static int dirtCount = 0;
         static int stoneCount = 0;
@@ -47,7 +34,7 @@ namespace Minecraft
         static Dirt dirt = new(Blocks.Dirt, 2, ConsoleColor.DarkGreen);
         static Stone stone = new(Blocks.Stone, 4, ConsoleColor.Cyan);
         static Diamond diamond = new(Blocks.Diamond, 7, ConsoleColor.Blue);
-        static List<Block> blockList = new List<Block>();
+        static AlleBloecke blockList = new AlleBloecke();
         static Random random = new Random();
         static Player player = new(10);
         static Array allWeapons = Enum.GetValues(typeof(Weapons));
@@ -64,10 +51,10 @@ namespace Minecraft
             allEnemies[1] = creeper;
             allEnemies[2] = zombie;
 
-            blockList.Add(wood);
-            blockList.Add(dirt);
-            blockList.Add(stone);
-            blockList.Add(diamond);
+            blockList.AddBlock(wood);
+            blockList.AddBlock(dirt);
+            blockList.AddBlock(stone);
+            blockList.AddBlock(diamond);
 
             while (game)
             {
@@ -97,16 +84,16 @@ namespace Minecraft
                             {
                                 switch(b.getName())
                                 {
-                                    case Blocks.Diamond.ToString():
+                                    case "Diamond":
                                         Console.WriteLine("Diamonds: {0}", diamondCount);
                                         break;
-                                    case Blocks.Dirt.ToString():
+                                    case "Dirt":
                                         Console.WriteLine("Dirt: {0}", dirtCount);
                                         break;
-                                    case Blocks.Stone.ToString():
+                                    case "Stone":
                                         Console.WriteLine("Stone: {0}", stoneCount);
                                         break;
-                                    case Blocks.Wood.ToString():
+                                    case "Wood":
                                         Console.WriteLine("Wood: {0}", woodCount);
                                         break;
                                 }
@@ -130,6 +117,7 @@ namespace Minecraft
                         if (usedBlock == Blocks.Exit)
                         {
                             game = false;
+
                             mining = false;
                             break;
                         }
@@ -145,6 +133,7 @@ namespace Minecraft
                                 else if (b.getName() == Blocks.Stone.ToString()) Console.WriteLine("Stone: {0}", stoneCount);
                                 else if (b.getName() == Blocks.Wood.ToString()) Console.WriteLine("Wood: {0}", woodCount);
                             }
+
                             Console.ForegroundColor = ConsoleColor.Gray;
                             Console.WriteLine("------------------------------------------");
                             continue;
